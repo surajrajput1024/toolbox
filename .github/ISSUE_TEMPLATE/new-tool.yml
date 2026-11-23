@@ -1,0 +1,22 @@
+name: New tool request
+description: Suggest a tool that runs fully in the browser
+labels: [enhancement, new tool]
+body:
+  - type: input
+    id: name
+    attributes: { label: Tool name }
+    validations: { required: true }
+  - type: textarea
+    id: why
+    attributes: { label: What does it do and who needs it? }
+    validations: { required: true }
+  - type: textarea
+    id: io
+    attributes: { label: Example input and expected output }
+  - type: checkboxes
+    id: offline
+    attributes:
+      label: Constraints
+      options:
+        - label: It can run entirely in the browser with nothing uploaded
+          required: true

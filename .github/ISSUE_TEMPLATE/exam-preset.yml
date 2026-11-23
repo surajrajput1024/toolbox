@@ -1,0 +1,21 @@
+name: Exam preset correction or addition
+description: A photo/signature size is wrong, outdated, or missing
+labels: [presets, good first issue]
+body:
+  - type: input
+    id: exam
+    attributes: { label: Exam and form name (photo or signature) }
+    validations: { required: true }
+  - type: input
+    id: notice
+    attributes: { label: Link to the official notice, description: Required. Must be the exam body's own site. }
+    validations: { required: true }
+  - type: textarea
+    id: values
+    attributes:
+      label: Values in the notice
+      description: Quote the lines. Size range in KB, dimensions, format, colour.
+    validations: { required: true }
+  - type: input
+    id: date
+    attributes: { label: Notice date or cycle }

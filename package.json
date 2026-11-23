@@ -1,0 +1,14 @@
+{
+  "name": "toolbox",
+  "version": "1.0.0",
+  "description": "Free, offline, no-upload web tools for PDFs, photos, exam forms, developers and Indian calculators.",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "node tools/build_site.js dist",
+    "test": "node test/logic.test.js",
+    "test:e2e": "node test/e2e.js && npm run build && node test/site.js",
+    "serve": "npm run build && npx --yes http-server dist -p 8080"
+  },
+  "devDependencies": { "playwright-core": "^1.48.0" }
+}
