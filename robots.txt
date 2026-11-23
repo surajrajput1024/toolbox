@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://surajrajput1024.github.io/toolbox/sitemap.xml
