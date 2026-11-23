@@ -56,3 +56,7 @@ footer{max-width:1000px;margin:auto;padding:8px 16px 32px;text-align:center;colo
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:700;z-index:50;animation:fi .2s}
 
 [hidden]{display:none!important}
+.crumbs{max-width:1000px;margin:8px auto 0;padding:0 16px;font-size:.8rem;color:var(--mut)}.crumbs a{color:inherit}
+.seo{max-width:760px;margin:24px auto;padding:0 16px;line-height:1.6}.seo h2{font-size:1.15rem;margin:20px 0 8px}.seo h3{font-size:1rem;margin:14px 0 4px}.seo p,.seo li{color:var(--mut)}.seo[hidden],.crumbs[hidden]{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+body[data-route] #view{min-height:100vh}

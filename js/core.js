@@ -3,7 +3,7 @@
   'use strict';
   const BASE = new URL('../', document.currentScript.src).href;
   const LS = { get: (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode */ } } };
-  let lang = LS.get('tb.lang', /^hi/.test(navigator.language) ? 'hi' : 'en');
+  let lang = document.body.dataset.lang || LS.get('tb.lang', /^hi/.test(navigator.language) ? 'hi' : 'en');
   const tr = (en, hi) => (lang === 'hi' && hi ? hi : en);
   const $ = (s, r) => (r || document).querySelector(s);
   function h(tag, a, ...kids) {
@@ -87,12 +87,12 @@
   let rid = 0;
   async function route() {
     const hm = location.hash.match(/^#\/([\w-]*)/), id = hm ? hm[1] : document.body.dataset.route || '', t = byId(id), v = $('#view'), my = ++rid;
-    $('.search').hidden = !!t; window.scrollTo(0, 0);
+    $('.search').hidden = !!t; window.scrollTo(0, 0); document.querySelectorAll('#seo,.crumbs').forEach((e) => { e.hidden = !!hm || !t; });
     if (!t) { home(); return; }
     pushRecent(id);
     const cc = TB_CATS[t.cat];
     if (!(document.body.dataset.route === id && !hm)) document.title = tr(t.en, t.hi) + ' | Toolbox';
-    v.replaceChildren(h('div', { class: 'tool-h ' + t.cat }, h('a', { class: 'back', href: '#/', 'aria-label': tr('Back', 'वापस') }, icon('back')), h('div', {}, h('h1', {}, tr(t.en, t.hi)), h('p', {}, tr(t.de, t.dh)))), privacy());
+    v.replaceChildren(h('div', { class: 'tool-h ' + t.cat }, h('a', { class: 'back', href: '#/', 'aria-label': tr('Back', 'वापस') }, icon('back')), h('div', {}, h('h1', {}, document.body.dataset.h1 && !hm && document.body.dataset.route === id ? document.body.dataset.h1 : tr(t.en, t.hi)), h('p', {}, tr(t.de, t.dh)))), privacy());
     const body = h('div', {}); v.append(body);
     try {
       await loadScript('js/tools/' + cc.mod + '.js'); if (my !== rid) return;
