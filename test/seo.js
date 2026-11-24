@@ -6,6 +6,7 @@ const files = []; (function w(d) { for (const f of fs.readdirSync(d)) { const p 
 const titles = new Map(), descs = new Map(), words = [];
 for (const f of files) { const h = fs.readFileSync(f, 'utf8'), rel = path.relative(ROOT, f) || 'index.html', g = (re) => (h.match(re) || [])[1];
   const t = g(/<title>([^<]*)<\/title>/), d = g(/<meta name="description" content="([^"]*)"/), canon = g(/<link rel="canonical" href="([^"]*)"/);
+  if (!/^hi\//.test(rel) && !/free online/i.test(t + ' ' + d)) fail(`${rel} lacks "free online" in title/description`);
   if (!t || t.length > 70) fail(`${rel} title length ${t && t.length}`); if (titles.has(t)) fail(`${rel} duplicate title with ${titles.get(t)}`); titles.set(t, rel);
   if (!d || d.length > 170 || d.length < (/^hi\//.test(rel) ? 40 : 70)) fail(`${rel} description length ${d && d.length}`); if (descs.has(d)) fail(`${rel} duplicate description`); descs.set(d, rel);
   if (!canon) fail(`${rel} no canonical`); if ((h.match(/<h1[ >]/g) || []).length !== 1) fail(`${rel} h1 count`);
