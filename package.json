@@ -7,7 +7,8 @@
   "scripts": {
     "build": "node tools/build_site.js dist",
     "test": "node test/logic.test.js",
-    "test:e2e": "node test/e2e.js && npm run build && node test/site.js",
+    "test:seo": "npm run build && node test/seo.js",
+    "test:e2e": "node test/e2e.js && npm run build && node test/site.js && node test/seo.js",
     "serve": "npm run build && npx --yes http-server dist -p 8080"
   },
   "devDependencies": { "playwright-core": "^1.48.0" }
