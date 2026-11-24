@@ -24,7 +24,7 @@
 
   /** Drop zone + "pick file" button. onFiles(File[]). */
   function drop({ accept, multiple, onFiles, hint }) {
-    const inp = h('input', { type: 'file', accept, multiple: !!multiple, class: 'sr', tabindex: -1, onchange: () => { if (inp.files.length) onFiles([...inp.files]); inp.value = ''; } });
+    const inp = h('input', { type: 'file', accept, multiple: !!multiple, class: 'sr', tabindex: -1, 'aria-label': tr('Choose files', 'फ़ाइलें चुनें'), onchange: () => { if (inp.files.length) onFiles([...inp.files]); inp.value = ''; } });
     const z = h('div', { class: 'drop' }, h('div', { class: 'ic' }, icon('up')), h('b', {}, tr(multiple ? 'Drag files here' : 'Drag a file here', multiple ? 'फाइलें यहाँ खींचें' : 'फाइल यहाँ खींचें')), h('p', {}, hint || ''),
       h('button', { class: 'btn', type: 'button', onclick: () => inp.click() }, icon('file', 20), tr(multiple ? 'Pick files' : 'Pick file', multiple ? 'फाइलें चुनें' : 'फाइल चुनें')), inp);
     ['dragenter', 'dragover'].forEach((e) => z.addEventListener(e, (ev) => { ev.preventDefault(); z.classList.add('over'); }));
@@ -47,7 +47,8 @@
   }
   const errBox = (e) => h('div', { class: 'msg err', role: 'alert' }, tr('Could not do that: ', 'यह नहीं हो सका: '), e && e.message ? e.message : String(e));
   const copyBtn = (get) => h('button', { class: 'btn sec sm', onclick: () => { navigator.clipboard.writeText(get()).then(() => toast(tr('Copied', 'कॉपी हो गया')), () => toast(tr('Copy failed', 'कॉपी नहीं हुआ'))); } }, icon('copy', 18), tr('Copy', 'कॉपी'));
-  const field = (label, input) => h('div', {}, h('label', { class: 'l' }, label), input);
+  let fid = 0;
+  const field = (label, input) => { const l = h('label', { class: 'l', id: 'fl' + ++fid }, label); const c = input.matches?.('input,select,textarea') ? input : input.querySelector?.('input,select,textarea'); if (c) c.setAttribute('aria-labelledby', l.id); return h('div', {}, l, input); };
   const num = (v, a) => h('input', Object.assign({ class: 'in', type: 'number', inputMode: 'decimal', value: v }, a));
   const seg = (opts, cur, on) => { const w = h('div', { class: 'seg', role: 'group' }); const set = (v) => { [...w.children].forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === v)); on(v); }; opts.forEach(([v, l]) => w.append(h('button', { type: 'button', 'data-v': v, 'aria-pressed': v === cur, onclick: () => set(v) }, l))); return w; };
 
@@ -111,7 +112,7 @@
     if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register(BASE + 'sw.js').catch(() => {});
   }
   function chrome() {
-    root.lang = lang; $('#lang').textContent = lang === 'en' ? 'हिं' : 'EN'; $('#lang').setAttribute('aria-label', 'Language');
+    root.lang = lang; $('#lang').textContent = lang === 'en' ? 'हिं' : 'EN'; $('#lang').setAttribute('aria-label', lang === 'en' ? 'हिं Hindi' : 'EN English');
     $('#q').placeholder = tr('Search tools: pdf, photo, emi…', 'टूल खोजें: pdf, photo, emi…'); $('#q').setAttribute('aria-label', $('#q').placeholder);
     $('#theme').replaceChildren(icon('moon', 22)); $('#theme').setAttribute('aria-label', tr('Dark / light', 'डार्क / लाइट'));
     $('#foot').textContent = tr('No ads. No sign-up. Your files never leave this device.', 'कोई विज्ञापन नहीं। कोई साइन-अप नहीं। आपकी फाइलें इस डिवाइस से बाहर नहीं जातीं।');

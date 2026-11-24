@@ -17,6 +17,8 @@ const related = (route, hi) => { const t = TBY[route], same = TOOLS.filter((x) =
 /** o: { dir, route, title, desc, h1, lang, preset, kb, intro, steps, tip, faq, extra(html), alt(dir of other-language page), crumb } */
 function page(o) {
   if (o.desc.length < 110 && o.lang === 'en') o.desc += ' No sign-up, no watermark, nothing uploaded.';
+  // every English page must say "free online" in title or description (search phrase)
+  if (o.lang === 'en' && !/free online/i.test(o.title + o.desc)) o.desc = o.desc.replace(/\bFree and offline\b/i, 'Free online tool, works offline').replace(/\b(Free)([,.;]| and)/i, '$1 online tool$2');
   const hi = o.lang === 'hi', depth = o.dir.split('/').length, pre = '../'.repeat(depth), canon = BASE + o.dir + '/', t = TBY[o.route], img = `${BASE}og/${o.route}.jpg`;
   const crumbs = [['Toolbox', BASE]].concat(o.dir.startsWith('exam/') || o.dir.startsWith('hi/') && o.dir.includes('exam') ? [[hi ? 'परीक्षा' : 'Exam & size', null]] : []).concat([[hi ? t.hi : t.en, o.dir === o.route ? null : BASE + o.route + '/'], [o.crumb || o.h1, canon]]).filter((c, i, a) => !(i === a.length - 2 && o.dir === o.route && !c[1]));
   const bc = crumbs.filter((c) => c[1]);
