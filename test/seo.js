@@ -8,6 +8,7 @@ for (const f of files) { const h = fs.readFileSync(f, 'utf8'), rel = path.relati
   const t = g(/<title>([^<]*)<\/title>/), d = g(/<meta name="description" content="([^"]*)"/), canon = g(/<link rel="canonical" href="([^"]*)"/);
   if (!t || t.length > 70) fail(`${rel} title length ${t && t.length}`); if (titles.has(t)) fail(`${rel} duplicate title with ${titles.get(t)}`); titles.set(t, rel);
   if (!d || d.length > 170 || d.length < (/^hi\//.test(rel) ? 40 : 70)) fail(`${rel} description length ${d && d.length}`); if (descs.has(d)) fail(`${rel} duplicate description`); descs.set(d, rel);
+  if (/gc\.zgo\.at/.test(h) !== !!process.env.GOATCOUNTER) fail(`${rel} counter tag mismatch`);
   if (!canon) fail(`${rel} no canonical`); if ((h.match(/<h1[ >]/g) || []).length !== 1) fail(`${rel} h1 count`);
   for (const m of h.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/g)) try { JSON.parse(m[1]); } catch (e) { fail(`${rel} bad JSON-LD`); }
   if (rel !== 'index.html') { const s = (h.match(/<section id="seo".*?<\/section>/s) || [''])[0].replace(/<[^>]+>/g, ' '), n = s.split(/\s+/).filter(Boolean).length; words.push([rel, n]); if (n < (/^hi\//.test(rel) ? 90 : 130)) fail(`${rel} only ${n} words`); if (!/FAQPage/.test(h)) fail(`${rel} no FAQPage`); } }

@@ -54,4 +54,15 @@ fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="U
 fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${BASE}sitemap.xml\n`);
 fs.writeFileSync(path.join(OUT, '404.html'), `<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=${BASE}"><title>Toolbox</title><a href="${BASE}">Toolbox</a>`);
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
+// Optional cookieless visit counter (GoatCounter). Off unless GOATCOUNTER=<site code> is set at build time (repo variable in CI).
+const GC = process.env.GOATCOUNTER || '';
+if (GC) {
+  if (!/^[a-z0-9-]{2,50}$/.test(GC)) throw new Error('GOATCOUNTER must be a GoatCounter site code like "mytoolbox"');
+  // count.js reports the <link rel=canonical> path when present (every page has one), so no query/hash is sent; no cookies.
+  const tag = `<script data-goatcounter="https://${GC}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`;
+  (function walk(d) { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); if (fs.statSync(p).isDirectory()) { if (!/^(js|lib|vendor|css|icons|og)$/.test(f)) walk(p); } else if (/\.html$/.test(f) && f !== '404.html') {
+    let h = fs.readFileSync(p, 'utf8').replace('</head>', tag + '</head>');
+    if (f === 'privacy.html') h = h.replace('accounts, or analytics', 'or accounts. We count page visits with GoatCounter (no cookies, no personal data, only the page path; see goatcounter.com/help/privacy)');
+    fs.writeFileSync(p, h); } } })(OUT);
+}
 const exams = urls.filter((u) => u[0].includes('/exam/')).length; console.log(`site: ${urls.length} urls (${TOOLS.length} tools, ${exams} landing pages) -> ${OUT}`);
